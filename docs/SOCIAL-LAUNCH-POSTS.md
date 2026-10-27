@@ -28,7 +28,7 @@ Exposing 72 MCP device/debugger tools per turn would burn tokens fast if uncache
 Everything is Apache-2.0 with sanitized transcripts for every run:
 
 - Showcase + results: https://github.com/LincForge/nerve-muse-sam
-- `linc-nerve` (`SAM 3.1` grounding PR): https://github.com/LincForge/nerve/pull/1
+- `linc-nerve` (`SAM 3.1` grounding): https://github.com/LincForge/nerve
 - `mobile-agent-bench` (`Muse Spark` runner PR): https://github.com/LincForge/mobile-agent-bench/pull/27
 
 ---
@@ -54,5 +54,5 @@ Every run executes in a confined sandbox (`no shell`, `no web`, path-guarded `Re
 
 Code, PRs, and raw transcripts (Apache-2.0):
 - Repo: https://github.com/LincForge/nerve-muse-sam
-- `nerve` PR: https://github.com/LincForge/nerve/pull/1
+- `nerve` MCP server: https://github.com/LincForge/nerve
 - `mobile-agent-bench` PR: https://github.com/LincForge/mobile-agent-bench/pull/27
