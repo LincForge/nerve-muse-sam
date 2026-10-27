@@ -75,7 +75,7 @@ Every run executes under strict confinement (`AGENT_CWD=/tmp/mab-agent-cwd`, no 
 
 #### Voided cells (disclosed)
 
-Two early `c9` attempts on 2026-10-27 (`muse-spark-1.3-contributor`) are **void** and are kept, not deleted:
+Two early `c9` attempts on 2026-10-27 (`muse-spark-1.3-contributor`) are **void** and are kept, not deleted ([`results/voided/`](results/voided/)):
 1. **Harness turn cap.** The first Muse runner stopped at a hard-coded 40 turns. It cut the run off at 131 s of the task's 900 s budget, and graded a mid-task sentence. The Claude baseline cells on `c9` used 101–165 turns. Fixed in [`mobile-agent-bench@e20e04e`](https://github.com/LincForge/mobile-agent-bench/commit/e20e04e): the wall-clock timeout is now the binding budget, and a cap cut-off is flagged rather than graded.
 2. **Wrong device.** Seven devices were attached to the bench host. The agent picked a Pixel 8 Pro running the *stock* APK from `nerve_discover`, instead of the S24 that the harness had reset with the *seeded* APK. The answer-regex matched "DO NOT SHIP" plus an unrelated "Tier dropdown" mention (regex PASS, 773.7 s, 187 turns, $0.063), but the answer said Tier worked. So it never found the seeded defect, and the cell counts as FAIL/void. The same cause voided Claude cells in July (`AMENDMENTS.md`). The fix is the same too: run with only the benchmark device attached.
 
