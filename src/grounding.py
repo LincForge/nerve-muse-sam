@@ -1,16 +1,8 @@
 """Visual UI grounding via Meta SAM 3.1 Promptable Concept Segmentation.
 
-When `nerve_elements` / `nerve_state` return an empty accessibility tree
-(e.g. `uiautomator dump` killed on Android 14+, Flutter/Unity/WebView custom
-canvases, or unlabelled icon buttons), callers can ground natural-language
-visual descriptions ("the green Check Status chip", "the gear settings icon")
-directly on the screenshot frame using SAM 3.1 (`POST /v1/responses`) and decode
-1-bit masks via `meta-sam-parser`.
-
-Coordinate invariant (LINC rule 99f5b331):
-SAM 3.1 boxes and masks are returned in the pixel coordinate space of the image
-sent to the model `(W_img, H_img)`, whereas `nerve_tap(x, y)` expects physical
-device display coordinates `(W_screen, H_screen)` from `ctrl.get_screen_size()`.
+When `nerve_elements` / `nerve_state` return an empty accessibility tree or
+unlabelled controls, callers can ground natural-language visual descriptions
+using SAM 3.1 (`POST /v1/responses`) and decode 1-bit masks via `meta-sam-parser`.
 All returned `bounds` and `center` coordinates are scaled by
 `(W_screen / W_img, H_screen / H_img)` when `screen_size` is provided.
 """
@@ -377,3 +369,29 @@ VISUAL_GROUNDING_HINT = (
     "Use nerve_ground(device, prompt=..., annotate=True) or nerve_tap(device, prompt=...) "
     "for Meta SAM 3.1 visual concept grounding."
 )
+
+
+def attach_visual_grounding_hint(
+    payload: dict[str, Any],
+    elements: list[dict[str, Any]] | None,
+    elements_error: str | None = None,
+) -> dict[str, Any]:
+    """Attach `visual_grounding_hint` to *payload* when UI hierarchy needs visual fallback."""
+    if should_suggest_visual_grounding(elements, elements_error):
+        payload["visual_grounding_hint"] = VISUAL_GROUNDING_HINT
+    return payload
+
+
+def attach_grounded_tap(
+    res: dict[str, Any],
+    store: dict[tuple[str, int, int], dict[str, Any]],
+    device: str,
+    x: int | None,
+    y: int | None,
+) -> dict[str, Any]:
+    """Attach consumed SAM 3.1 grounding metadata to a `nerve_tap` result dict."""
+    if x is not None and y is not None:
+        grounded = store.pop((device, int(x), int(y)), None)
+        if grounded is not None:
+            res["grounded"] = grounded
+    return res
