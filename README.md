@@ -1,0 +1,95 @@
+# `nerve-muse-sam` — Meta `Muse Spark 1.3` + `SAM 3.1` Physical-Device Mobile & Wear OS Agent
+
+**Meta Global AI Developer Hackathon (Oct 26 – Nov 4, 2026) · Startup Track · Push the Frontier**
+
+Give **Meta Muse Spark (`muse-spark-1.3`)** and **SAM 3.1 (`sam-3.1`)** hands and eyes on physical Android phones, Wear OS smartwatches, and iOS simulators via the Model Context Protocol (MCP) — evaluated under pre-registered confinement on [`mobile-agent-bench`](https://github.com/LincForge/mobile-agent-bench).
+
+---
+
+## 1. Hackathon Contribution Manifest (Oct 26 – Nov 4, 2026)
+
+Per the Hackathon Startup Track rules (*"Startups may build on existing products or codebases, but you must clearly identify what was newly developed during the Hackathon"*), **100% of this repository** was created during the Oct 26 – Nov 4, 2026 Hackathon window, alongside the two upstream open-source PRs against baseline tag `pre-hackathon-2026-10-26`:
+
+| Surface | Newly Built Hackathon Artifact (Oct 26 – Nov 4, 2026) | Upstream PR / Diff |
+|---|---|---|
+| **Visual Grounding (`SAM 3.1`)** | [`src/grounding.py`](src/grounding.py) + [`tests/test_grounding.py`](tests/test_grounding.py) — Promptable Concept Segmentation (`POST /v1/responses`, `model="sam-3.1"`), 1-bit base85 mask center-of-mass decoding via `meta-sam-parser==0.1.0`, multi-platform coordinate scaling (`1080x2340` Android phone, `432x432` Wear OS watch, iOS points), `nerve_ground` MCP tool, `nerve_tap(prompt=...)` semantic fallback, and green mask + red centroid overlay rendering. | [`LincForge/nerve#1`](https://github.com/LincForge/nerve/pull/1) ([`pre-hackathon-2026-10-26..hackathon/muse-sam`](https://github.com/LincForge/nerve/compare/pre-hackathon-2026-10-26...hackathon/muse-sam)) |
+| **Agent Loop (`Muse Spark 1.3` + Open Weights)** | [`src/meta_agent.py`](src/meta_agent.py) + [`tests/test_meta_agent.py`](tests/test_meta_agent.py) — Native MCP stdio agent runner over `POST https://api.meta.ai/v1/responses` (and `/v1/chat/completions` for `meta-models/muse-spark-open-1026` / `meta-models/Muse-Glimmer-30B`), stateful `reasoning.encrypted_content` replay across tool calls, `prompt_cache_key` prefix caching, and confined `Read` multimodal screenshot injection. | [`LincForge/mobile-agent-bench#27`](https://github.com/LincForge/mobile-agent-bench/pull/27) ([`pre-hackathon-2026-10-26..hackathon/muse-sam`](https://github.com/LincForge/mobile-agent-bench/compare/pre-hackathon-2026-10-26...hackathon/muse-sam)) |
+| **Live Physical Bench Evidence** | [`results/`](results/) & [`assets/`](assets/) — Sanitized transcripts, token/cache accounting (`meta.json`), and live `SAM 3.1` segmentation overlays captured on physical **Samsung Galaxy S24 (`1080x2340`)** and **Samsung Galaxy Watch7 (`SM-L300`, `432x432`)**. | In this repo |
+
+---
+
+## 2. Why This Matters: Solving the #1 Failure Mode of Mobile QA Agents
+
+Mobile automation agents rely on `uiautomator dump` (Android) or accessibility trees to locate UI controls. In production apps, the accessibility tree frequently fails in three ways:
+1. **Unlabelled custom canvases** (`androidx.compose.foundation.Canvas`, Flutter/Skia surfaces, custom icons with no `contentDescription`).
+2. **60fps animations / game loops** where `uiautomator` times out waiting for an idle state.
+3. **Compact Wear OS smartwatch surfaces** (`432x432` circular displays) with custom complication dials.
+
+### Architecture: `Muse Spark 1.3` + `SAM 3.1` + `linc-nerve` MCP
+
+```mermaid
+flowchart LR
+    MS["Muse Spark 1.3<br/>POST /v1/responses<br/>(encrypted reasoning + prompt_cache_key)"]
+    MCP["linc-nerve MCP Server<br/>(nerve_state, nerve_elements, nerve_tap)"]
+    SAM["Meta SAM 3.1<br/>POST /v1/responses<br/>(1-bit mask + meta-sam-parser)"]
+    DEV["Physical Hardware Bench<br/>Galaxy S24 (1080x2340)<br/>Galaxy Watch7 (432x432)"]
+
+    MS -->|"1. Observe UI"| MCP
+    MCP -->|"uiautomator + scrcpy"| DEV
+    MCP -->|"visual_grounding_hint<br/>(empty/unlabelled tree)"| MS
+    MS -->|"2. nerve_ground(prompt) /<br/>nerve_tap(prompt)"| MCP
+    MCP -->|"Stage-1 PNG + concept prompt"| SAM
+    SAM -->|"Box + 1-bit mask centroid<br/>scaled by W_screen / W_img"| MCP
+    MCP -->|"3. Physical tap(x, y)"| DEV
+```
+
+### Key Technical Invariants Verified Against Live Meta APIs
+1. **Stateful Encrypted Reasoning Replay (`/v1/responses`):**
+   - Meta's `/v1/responses` endpoint is stateless when `store: false`. Our runner requests `"include": ["reasoning.encrypted_content"]` and `"reasoning": {"effort": "high"}`, replaying sealed `reasoning` items in exact turn order before `function_call` items.
+2. **92.2% Prompt Cache Hit Rate via `prompt_cache_key`:**
+   - Exposing 72 MCP device/debugger tools on every turn would be expensive uncached (`$1.25/M` input tokens). Pinning a per-run `prompt_cache_key` across turns achieved a **92.2% cached-token ratio** (`434,621` cached / `471,556` total input tokens) on live multi-turn device operation, cutting a 14-turn physical smartwatch run to **$0.118** on `muse-spark-1.3` Standard (and **<$0.01** on `muse-spark-1.3-contributor`).
+3. **Source-Pixel to Physical-Display Coordinate Scaling (`SAM 3.1`):**
+   - `linc-nerve` captures Stage-1 `scrcpy` frames at `~496x1080` on the Galaxy S24 (`scale ≈ 2.177x`) and `432x432` (`scale = 1.0x`) on the Galaxy Watch7. `SAM 3.1` returns bounding boxes and 1-bit masks in source-image pixels `(W_img, H_img)`. `grounding.py` decodes the base85 1-bit raster via `meta_sam_parser.decode_mask_to_raster`, computes the true pixel center-of-mass, and scales to physical `ctrl.get_screen_size(device)` coordinates before passing through `nerve_tap`'s `0..32767` coordinate guard.
+
+---
+
+## 3. Live Physical Hardware Results
+
+### A. `SAM 3.1` Visual Grounding Overlays (`nerve ground --annotate`)
+
+| Physical Galaxy S24 (`1080x2340`) | Physical Galaxy Watch7 (`SM-L300`, `432x432`) |
+|---|---|
+| ![Galaxy S24 SAM 3.1 Grounded](assets/phone_s24_sam31_grounded.png) | ![Galaxy Watch7 SAM 3.1 Grounded](assets/watch7_sam31_grounded.png) |
+
+### B. `mobile-agent-bench` v3 Live Evaluation
+
+Every run executes under strict confinement (`AGENT_CWD=/tmp/mab-agent-cwd`, no shell, no web, `READ_GUARD` blocking benchmark source/specs) against real physical devices:
+
+| Task | Device | Model | Verdict | Wall Time | Turns | Input Tokens (Cached %) | Output Tokens | Total Cost (Standard) | Evidence |
+|---|---|---|---:|---:|---:|---:|---:|---:|---|
+| **`b11` (`wearos-mode-switch-ping`)** | Galaxy Watch7 (`SM-L300`, Wear OS 16) | `muse-spark-1.3` | **PASS** | **57.58s** | 14 | 471,556 (**92.2% cached**) | 1,631 | **$0.118** | [`meta.json`](results/b11_watch7_run1/meta.json) · [`transcript.jsonl`](results/b11_watch7_run1/transcript.jsonl) |
+
+*(Additional phone grid cells including `c9-ship-gate` custom Compose `Canvas` defect detection are being appended from the physical bench runner.)*
+
+---
+
+## 4. Reproduce Locally
+
+```bash
+# 1. Install linc-nerve with SAM 3.1 visual grounding
+git clone -b hackathon/muse-sam https://github.com/LincForge/nerve.git
+cd nerve && uv sync
+
+# 2. Ground any visual UI concept on a connected Android phone or Wear OS watch
+export META_AI_API_KEY="your-meta-api-key"
+uv run nerve ground --device <adb-serial> --prompt "submit button" --annotate
+
+# 3. Run mobile-agent-bench with Meta Muse Spark 1.3
+git clone -b hackathon/muse-sam https://github.com/LincForge/mobile-agent-bench.git
+cd mobile-agent-bench
+BENCH_TASKS_DIR=tasks_v3 BENCH_RESULTS_DIR=results_v3_muse BENCH_DEVICE_SERIAL=<adb-serial> \
+  uv run bench run --tool linc --task b11 --runs 1 --model muse-spark-1.3
+```
+
+## License
+Apache-2.0 — see [LICENSE](LICENSE).
