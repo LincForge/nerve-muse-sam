@@ -1,5 +1,12 @@
 # Social Launch Drafts (X & LinkedIn) — Meta Hackathon Demo
 
+> **DRAFT. Check every claim against a recorded run before posting** (verified 2026-10-27):
+> - [ ] Post 1 shows Muse Spark calling SAM 3.1 and tapping the unlabelled Canvas button live. No bench run has done this yet: `b11` ran on the frozen `linc` column, which has no grounding. Post it only once the `linc-sam` `c9` demo clip exists.
+> - [ ] "`<$0.01` in contributor mode" for `b11` is an estimate from price tables. `b11` ran on Standard `muse-spark-1.3`. Either run it on `-contributor` or drop the clause.
+> - [ ] "`$0.0025/image`" for SAM 3.1: re-check dev.meta.ai pricing on the day of posting.
+> - [x] 92.2% cache rate, 57.58 s, 14 turns and $0.118 match `results/b11_watch7_run1/meta.json`.
+> - [x] Tool count: 70 MCP tools (nerve 48 + crucible 8 + spectra 14) plus `Read`.
+
 > **Note:** Posting the demo video on X before **Nov 8 EOD** qualifies for the **$20,000 Most Viral Project** bonus prize in the Meta Global AI Developer Hackathon.
 
 ---
@@ -22,7 +29,7 @@ What we learned wiring `POST https://api.meta.ai/v1/responses` into `linc-nerve`
 Pass a screenshot + short noun phrase (`"submit icon"`), get back source-pixel boxes + base85 1-bit masks in ~0.94s. Decoding the 1-bit raster gives true mask center-of-mass for non-rectangular icons and circular Wear OS (`432x432`) targets.
 
 2. **Encrypted Reasoning Replay + `prompt_cache_key`:**
-Exposing 72 MCP device/debugger tools per turn would burn tokens fast if uncached. Pinning `prompt_cache_key` across turns hit a **92.2% prompt cache rate** (`434k` cached / `471k` input tokens) — a 14-turn physical Galaxy Watch7 run (`b11`) passed in 57.6s for **$0.118** (`<$0.01` in contributor mode).
+Exposing 70 MCP device/debugger tools per turn would burn tokens fast if uncached. Pinning `prompt_cache_key` across turns hit a **92.2% prompt cache rate** (`434k` cached / `471k` input tokens) — a 14-turn physical Galaxy Watch7 run (`b11`) passed in 57.6s for **$0.118** (`<$0.01` in contributor mode).
 
 **Post 3 (Open Source & Reproducible Benchmark Links):**
 Everything is Apache-2.0 with sanitized transcripts for every run:
@@ -47,7 +54,7 @@ Three engineering takeaways from building on Meta's new Model API (`https://api.
 When `nerve_elements` or `nerve_state` detects an empty tree or unlabelled clickable node, it hints the agent to ground visually. `SAM 3.1` segments the Stage-1 screenshot in ~0.94s (`$0.0025/image`), `meta-sam-parser` decodes the 1-bit raster mask to compute the true center-of-mass, and `nerve` scales the centroid from screenshot pixels (`496x1080`) into physical device coordinates (`1080x2340` on S24, `432x432` 1:1 on Watch7).
 
 2. **Stateful encrypted reasoning across MCP tool calls:**
-Running 72 MCP tools (`nerve`, `crucible`, `spectra`) over `/v1/responses` with `reasoning.encrypted_content` replay and a stable `prompt_cache_key` delivered a **92.2% cache hit ratio** (`434,621` cached tokens out of `471,556` input tokens). On our physical Galaxy Watch7 Wear OS benchmark task (`b11`), `muse-spark-1.3` completed the 14-turn flow in **57.58s** for **$0.118**.
+Running 70 MCP tools (`nerve`, `crucible`, `spectra`) over `/v1/responses` with `reasoning.encrypted_content` replay and a stable `prompt_cache_key` delivered a **92.2% cache hit ratio** (`434,621` cached tokens out of `471,556` input tokens). On our physical Galaxy Watch7 Wear OS benchmark task (`b11`), `muse-spark-1.3` completed the 14-turn flow in **57.58s** for **$0.118**.
 
 3. **Pre-registered, confined evaluation:**
 Every run executes in a confined sandbox (`no shell`, `no web`, path-guarded `Read`) with sanitized transcripts published alongside our existing Claude Sonnet 5 baseline.

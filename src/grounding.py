@@ -5,6 +5,11 @@ unlabelled controls, callers can ground natural-language visual descriptions
 using SAM 3.1 (`POST /v1/responses`) and decode 1-bit masks via `meta-sam-parser`.
 All returned `bounds` and `center` coordinates are scaled by
 `(W_screen / W_img, H_screen / H_img)` when `screen_size` is provided.
+
+Grounding is OPT-IN: it uploads the device screenshot to Meta, so it runs only
+with ``NERVE_GROUNDING=1``. The parser ships under Meta's SAM License (not an
+OSI license; it restricts some fields of use), so it is the optional extra
+``linc-nerve[grounding]`` and is imported lazily: core nerve never needs it.
 """
 
 from __future__ import annotations
@@ -13,31 +18,72 @@ import base64
 import io
 import math
 import os
+import re
 import subprocess
-from typing import Any
+from typing import TYPE_CHECKING, Any
 
 import httpx
 import structlog
-from meta_sam_parser import (
-    CompletedOutcome,
-    SegmentationBoxRecord,
-    SegmentationMaskRecord,
-    decode_mask_to_raster,
-    image_segmentation_format,
-)
 from PIL import Image, ImageDraw
 
 from linc_nerve.core.action_log import COORDINATE_MAX, parse_bounds
+
+if TYPE_CHECKING:
+    from types import ModuleType
+
+    from meta_sam_parser import SegmentationMaskRecord
 
 log = structlog.get_logger().bind(domain="grounding")
 
 DEFAULT_META_BASE_URL = "https://api.meta.ai/v1"
 SAM_MODEL_ID = "sam-3.1"
 DEFAULT_TIMEOUT_S = 15.0
+GROUNDING_ENV = "NERVE_GROUNDING"
+KEYCHAIN_SERVICE_ENV = "NERVE_KEYCHAIN_SERVICE"
+# A prompt tap needs a clear winner: the top match at or above this confidence
+# and at least this far ahead of the runner-up. Otherwise nothing is tapped.
+MIN_TAP_CONFIDENCE = 0.5
+MIN_TAP_MARGIN = 0.1
+# Wire responses larger than this, or claiming a mask bigger than the image,
+# are rejected before the (quota-free) mask decoder sees them.
+MAX_SAM_RESPONSE_CHARS = 2_000_000
+_MASK_DIMS_RE = re.compile(r"data=(\d+),(\d+),")
+
+DISABLED_ERROR = (
+    "Visual grounding is disabled: set NERVE_GROUNDING=1 to enable it "
+    "(it uploads the device screenshot to Meta's SAM 3.1 API)."
+)
 
 
-def _keychain_secret(account: str, service: str = "linc-env") -> str | None:
-    """Read an API key from macOS Keychain without logging or echoing it."""
+class GroundingUnavailable(RuntimeError):
+    """Raised when the optional SAM parser extra is not installed."""
+
+
+def grounding_enabled() -> bool:
+    """Return True only when the operator opted in with ``NERVE_GROUNDING=1``."""
+    return os.environ.get(GROUNDING_ENV, "") == "1"
+
+
+def _sam_parser() -> ModuleType:
+    """Import ``meta_sam_parser`` lazily (optional extra, Meta SAM License)."""
+    try:
+        import meta_sam_parser
+    except ImportError as exc:
+        raise GroundingUnavailable(
+            "Visual grounding needs the optional extra: pip install 'linc-nerve[grounding]' "
+            "(meta-sam-parser, distributed under Meta's SAM License)."
+        ) from exc
+    return meta_sam_parser
+
+
+def _keychain_secret(account: str, service: str | None = None) -> str | None:
+    """Read an API key from macOS Keychain without logging or echoing it.
+
+    Only consulted when ``NERVE_KEYCHAIN_SERVICE`` names a Keychain service.
+    """
+    service = service or (os.environ.get(KEYCHAIN_SERVICE_ENV) or "").strip()
+    if not service:
+        return None
     try:
         proc = subprocess.run(
             ["security", "find-generic-password", "-s", service, "-a", account, "-w"],
@@ -67,7 +113,8 @@ def resolve_meta_api_key(api_key: str | None = None) -> str:
         if secret:
             return secret
     raise ValueError(
-        "Missing Meta API key: set META_AI_API_KEY in environment or Keychain (service 'linc-env')"
+        "Missing Meta API key: set META_AI_API_KEY (or name a macOS Keychain service "
+        "holding it in NERVE_KEYCHAIN_SERVICE)"
     )
 
 
@@ -82,7 +129,7 @@ def _clamp_coord(value: float, upper: int) -> int:
 def _mask_centroid(mask_rec: SegmentationMaskRecord) -> tuple[float, float] | None:
     """Compute the center of mass of a 1-bit SAM 3.1 mask in source image pixels."""
     try:
-        raster = decode_mask_to_raster(mask_rec.mask)
+        raster = _sam_parser().decode_mask_to_raster(mask_rec.mask)
     except Exception as exc:
         log.debug("sam_mask_decode_failed", error=str(exc))
         return None
@@ -209,6 +256,16 @@ def _build_target_node(
     }
 
 
+def _check_response_size(raw_text: str, img_size: tuple[int, int]) -> None:
+    """Reject wire text that is oversized or claims a mask larger than the image."""
+    if len(raw_text) > MAX_SAM_RESPONSE_CHARS:
+        raise ValueError(f"SAM 3.1 response too large ({len(raw_text)} chars)")
+    area = max(1, int(img_size[0])) * max(1, int(img_size[1]))
+    for match in _MASK_DIMS_RE.finditer(raw_text):
+        if int(match.group(1)) * int(match.group(2)) > area:
+            raise ValueError("SAM 3.1 response claims a mask larger than the screenshot")
+
+
 def parse_sam31_records(
     raw_text: str,
     prompt: str,
@@ -218,22 +275,24 @@ def parse_sam31_records(
     """Parse SAM 3.1 wire text into `ElementNode`-compatible dicts sorted by confidence."""
     if not isinstance(raw_text, str) or not raw_text.strip():
         return []
+    _check_response_size(raw_text, img_size)
 
-    parser = image_segmentation_format().create_parser()
+    sam = _sam_parser()
+    parser = sam.image_segmentation_format().create_parser()
     parser.push(raw_text.strip())
-    finish = parser.finish(CompletedOutcome())
+    finish = parser.finish(sam.CompletedOutcome())
     if finish.result is None:
         return []
 
-    boxes: dict[str, SegmentationBoxRecord] = {}
-    masks: dict[str, SegmentationMaskRecord] = {}
+    boxes: dict[str, Any] = {}
+    masks: dict[str, Any] = {}
     order: list[str] = []
     for rec in finish.result.records:
-        if isinstance(rec, SegmentationBoxRecord):
+        if isinstance(rec, sam.SegmentationBoxRecord):
             boxes[rec.object_id] = rec
             if rec.object_id not in order:
                 order.append(rec.object_id)
-        elif isinstance(rec, SegmentationMaskRecord):
+        elif isinstance(rec, sam.SegmentationMaskRecord):
             masks[rec.object_id] = rec
             if rec.object_id not in order:
                 order.append(rec.object_id)
@@ -268,6 +327,34 @@ def parse_sam31_records(
 
     targets.sort(key=lambda item: float(item.get("confidence", 0.0)), reverse=True)
     return targets
+
+
+def require_grounding(api_key: str | None = None) -> str:
+    """Check opt-in, the optional extra, and the API key BEFORE any screenshot.
+
+    Returns the resolved key; raises ``ValueError`` / ``GroundingUnavailable``.
+    """
+    if not grounding_enabled():
+        raise ValueError(DISABLED_ERROR)
+    _sam_parser()
+    return resolve_meta_api_key(api_key)
+
+
+def describe_error(exc: BaseException) -> str:
+    """Summarize a grounding failure without echoing request URLs or headers."""
+    if isinstance(exc, httpx.HTTPStatusError):
+        return f"SAM 3.1 API returned HTTP {exc.response.status_code}"
+    if isinstance(exc, httpx.HTTPError):
+        return f"SAM 3.1 API request failed ({type(exc).__name__})"
+    return f"{type(exc).__name__}: {str(exc)[:200]}"
+
+
+def _valid_screen_size(screen_size: Any) -> bool:
+    return (
+        isinstance(screen_size, dict)
+        and int(screen_size.get("width") or 0) > 0
+        and int(screen_size.get("height") or 0) > 0
+    )
 
 
 def ground_visual_targets(
@@ -351,6 +438,8 @@ def should_suggest_visual_grounding(
     elements_error: str | None = None,
 ) -> bool:
     """Return True when the UI tree is empty, errored, or has unlabelled clickable nodes."""
+    if not grounding_enabled():
+        return False
     if elements_error or not elements:
         return True
     clickable = [el for el in elements if isinstance(el, dict) and el.get("clickable")]
@@ -380,6 +469,18 @@ def attach_visual_grounding_hint(
     if should_suggest_visual_grounding(elements, elements_error):
         payload["visual_grounding_hint"] = VISUAL_GROUNDING_HINT
     return payload
+
+
+def select_tap_target(targets: list[dict[str, Any]]) -> dict[str, Any] | str:
+    """Return the one clear match to tap, or an error string when none is safe."""
+    if not targets:
+        return "No visual match found"
+    top = float(targets[0].get("confidence") or 0.0)
+    if top < MIN_TAP_CONFIDENCE:
+        return f"Best visual match is too weak to tap (confidence {top:.2f})"
+    if len(targets) > 1 and top - float(targets[1].get("confidence") or 0.0) < MIN_TAP_MARGIN:
+        return "Ambiguous visual matches: refine the prompt or tap one candidate by x/y"
+    return targets[0]
 
 
 def attach_grounded_tap(

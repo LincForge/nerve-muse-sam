@@ -109,8 +109,9 @@ def test_ground_visual_targets_and_overlay_rendering(monkeypatch: pytest.MonkeyP
         assert out_img.size == (496, 1080)
 
 
-def test_should_suggest_visual_grounding() -> None:
+def test_should_suggest_visual_grounding(monkeypatch: pytest.MonkeyPatch) -> None:
     """Empty trees, failed dumps, or unlabelled clickable Canvas nodes trigger the hint."""
+    monkeypatch.setenv("NERVE_GROUNDING", "1")
     assert grounding.should_suggest_visual_grounding([]) is True
     assert grounding.should_suggest_visual_grounding(None, elements_error="timeout") is True
     # Seeded c9 Canvas button: clickable node with empty text/desc/id
@@ -151,6 +152,7 @@ def test_nerve_ground_and_tap_prompt_integration(monkeypatch: pytest.MonkeyPatch
         ),
     )
     monkeypatch.setenv("META_AI_API_KEY", "test-meta-key")
+    monkeypatch.setenv("NERVE_GROUNDING", "1")
 
     ground_res = ui_tools._nerve_ground_sync(device="SER123", prompt="submit icon", annotate=False)
     assert ground_res["count"] == 1
