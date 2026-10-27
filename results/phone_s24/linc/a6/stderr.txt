@@ -1,0 +1,24 @@
+[linc-nerve]
+2026-10-27 16:00:44 [debug    ] wda_orphan_scan_skipped        domain=device_control reason=no_candidates
+2026-10-27 16:00:44 [debug    ] wda_ports_swept                domain=device_control reclaimed=all
+2026-10-27 16:00:44 [debug    ] device_manager_init            db_path=/Users/<REDACTED>/.local/share/linc-nerve/devices.db domain=device_control pid=69775 session_id=d491c70d0247
+2026-10-27 16:00:44 [info     ] http_server_skipped_existing_daemon domain=sse_server host=127.0.0.1 port=8111
+2026-10-27 16:00:55 [debug    ] device_cache_refreshed         device_count=70 domain=device_control duration_ms=1202.1487500023795
+2026-10-27 16:01:05 [warning  ] slow_command                   cmd=uiautomator domain=device_control duration_ms=2133.7 serial=<REDACTED-0>
+2026-10-27 16:01:05 [warning  ] slow_command                   cmd=elements domain=device_control duration_ms=2136.0 serial=<REDACTED-0>
+2026-10-27 16:01:05 [info     ] scrcpy_available               domain=device_control
+2026-10-27 16:01:05 [info     ] scrcpy_server_pushed           domain=device_control serial=<REDACTED-0> size=90980
+2026-10-27 16:01:06 [info     ] scrcpy_control_connected       domain=device_control port=56478 serial=<REDACTED-0>
+2026-10-27 16:01:06 [info     ] scrcpy_stream_started          domain=device_control max_size=1080 port=56478 serial=<REDACTED-0>
+2026-10-27 16:01:12 [warning  ] slow_command                   cmd=uiautomator domain=device_control duration_ms=2132.9 serial=<REDACTED-0>
+2026-10-27 16:01:12 [warning  ] slow_command                   cmd=elements domain=device_control duration_ms=2134.1 serial=<REDACTED-0>
+2026-10-27 16:01:20 [warning  ] slow_command                   cmd=uiautomator domain=device_control duration_ms=2157.7 serial=<REDACTED-0>
+2026-10-27 16:01:20 [warning  ] slow_command                   cmd=elements domain=device_control duration_ms=2158.2 serial=<REDACTED-0>
+
+[linc-crucible]
+objc[69784]: Class AVFFrameReceiver is implemented in both /Users/<REDACTED>/projects/linc-crucible-pin/.venv/lib/python3.13/site-packages/av/.dylibs/libavdevice.62.1.100.dylib (0x105ad03a8) and /Users/<REDACTED>/projects/linc-crucible-pin/.venv/lib/python3.13/site-packages/cv2/.dylibs/libavdevice.61.3.100.dylib (0x1106043a8). This may cause spurious casting failures and mysterious crashes. One of the duplicates must be removed or renamed.
+objc[69784]: Class AVFAudioReceiver is implemented in both /Users/<REDACTED>/projects/linc-crucible-pin/.venv/lib/python3.13/site-packages/av/.dylibs/libavdevice.62.1.100.dylib (0x105ad03f8) and /Users/<REDACTED>/projects/linc-crucible-pin/.venv/lib/python3.13/site-packages/cv2/.dylibs/libavdevice.61.3.100.dylib (0x1106043f8). This may cause spurious casting failures and mysterious crashes. One of the duplicates must be removed or renamed.
+
+[linc-spectra]
+[10/27/26 16:00:45] INFO     Processing request of type            server.py:720
+                             ListToolsRequest                                   
