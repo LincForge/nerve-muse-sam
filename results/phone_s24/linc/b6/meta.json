@@ -1,0 +1,45 @@
+{
+  "agent_exit_code": 0,
+  "app_pin": {
+    "action": "verified",
+    "apk_md5": "2b07633116643b8165fe7cd0550e1a58",
+    "package": "dev.lincforge.benchtarget"
+  },
+  "capability_row": false,
+  "device": {
+    "android_version": "16",
+    "build": "BP4A.251205.006",
+    "model": "SM-S921U",
+    "sdk": "36"
+  },
+  "device_locked_post": false,
+  "device_locked_pre": false,
+  "model": "muse-spark-1.3-contributor",
+  "reset_steps": [
+    "wake",
+    "home",
+    "force-stop",
+    "clear-data"
+  ],
+  "solved_unfinalized": false,
+  "started_utc": "2026-10-27T21:44:16+00:00",
+  "task": "b6",
+  "tier": "B",
+  "timed_out": false,
+  "tokens": {
+    "cache_creation_tokens": 0,
+    "cache_read_tokens": 5264193,
+    "input_tokens": 94624,
+    "num_turns": 82,
+    "output_tokens": 13001,
+    "source": "result-record",
+    "total_billed": 5371818,
+    "total_cost_usd": 0.022591,
+    "total_uncached": 107625
+  },
+  "tool": "linc",
+  "uiautomation_holders_cleared": [],
+  "verdict": "PASS",
+  "verify_detail": "ter wipe)\\n* Network `validated:true`, battery/charging unchanged\\n\\n`launchCount` persists across `kill` (increments each cold start) and resets to `0` on `clear_app_data`. A test that cold-starts without wiping data therefore walks the `0,1,2,3,4,0\u2026` cycle and fails 2/5 times.\\n\\nFix test: either wipe data before assert (`pm clear` \u2192 always `launchCount=0`, button present) or assert conditionally on `Sync status` / wait for `Sync idle`, or do not assert `Retry sync` when `Sync unavailable`.\\n'",
+  "wall_time_s": 319.43
+}

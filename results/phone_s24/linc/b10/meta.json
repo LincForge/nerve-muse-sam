@@ -1,0 +1,45 @@
+{
+  "agent_exit_code": 0,
+  "app_pin": {
+    "action": "verified",
+    "apk_md5": "2b07633116643b8165fe7cd0550e1a58",
+    "package": "dev.lincforge.benchtarget"
+  },
+  "capability_row": false,
+  "device": {
+    "android_version": "16",
+    "build": "BP4A.251205.006",
+    "model": "SM-S921U",
+    "sdk": "36"
+  },
+  "device_locked_post": false,
+  "device_locked_pre": false,
+  "model": "muse-spark-1.3-contributor",
+  "reset_steps": [
+    "wake",
+    "home",
+    "force-stop",
+    "clear-data"
+  ],
+  "solved_unfinalized": false,
+  "started_utc": "2026-10-27T21:47:05+00:00",
+  "task": "b10",
+  "tier": "B",
+  "timed_out": false,
+  "tokens": {
+    "cache_creation_tokens": 0,
+    "cache_read_tokens": 1259544,
+    "input_tokens": 96454,
+    "num_turns": 25,
+    "output_tokens": 4058,
+    "source": "result-record",
+    "total_billed": 1360056,
+    "total_cost_usd": 0.012976,
+    "total_uncached": 100512
+  },
+  "tool": "linc",
+  "uiautomation_holders_cleared": [],
+  "verdict": "PASS",
+  "verify_detail": "27 8927 D BenchTarget: maintenance op=compact_db blocked_ms=18`\\n- `10-27 14:46:52.224 8927 8927 W BenchTarget: stall_detected op=rebuild_index blocked_ms=1850 component=IndexRebuilder`\\n\\n**Answer:**\\n\\n1. **Stalling button:** `Rebuild index` (`op=rebuild_index`)\\n2. **Exact `blocked_ms`:** `1850` (~1.85s, matches \u201cnearly two seconds\u201d)\\n3. **Responsible component:** `IndexRebuilder`\\n\\nFull stall line:\\n`W BenchTarget: stall_detected op=rebuild_index blocked_ms=1850 component=IndexRebuilder`\\n'",
+  "wall_time_s": 97.14
+}

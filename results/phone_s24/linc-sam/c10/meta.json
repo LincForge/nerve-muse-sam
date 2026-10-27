@@ -1,0 +1,46 @@
+{
+  "agent_exit_code": 0,
+  "app_pin": {
+    "action": "installed",
+    "apk_md5": "2b07633116643b8165fe7cd0550e1a58",
+    "package": "dev.lincforge.benchtarget",
+    "previous_md5": "9ccbf77044370539f9a9c929477850d4"
+  },
+  "capability_row": false,
+  "device": {
+    "android_version": "16",
+    "build": "BP4A.251205.006",
+    "model": "SM-S921U",
+    "sdk": "36"
+  },
+  "device_locked_post": false,
+  "device_locked_pre": false,
+  "model": "muse-spark-1.3-contributor",
+  "reset_steps": [
+    "wake",
+    "home",
+    "force-stop",
+    "clear-data"
+  ],
+  "solved_unfinalized": false,
+  "started_utc": "2026-10-27T22:27:45+00:00",
+  "task": "c10",
+  "tier": "C",
+  "timed_out": false,
+  "tokens": {
+    "cache_creation_tokens": 0,
+    "cache_read_tokens": 621584,
+    "input_tokens": 44580,
+    "num_turns": 17,
+    "output_tokens": 3653,
+    "source": "result-record",
+    "total_billed": 669817,
+    "total_cost_usd": 0.006432,
+    "total_uncached": 48233
+  },
+  "tool": "linc-sam",
+  "uiautomation_holders_cleared": [],
+  "verdict": "PASS",
+  "verify_detail": "\"locals\":{\"discountFactor\":\"0.755\",\"totalDollars\":\"50\"},\\n    \"snapshots\":[{\"line\":\"26\",\"locals\":{\"discountFactor\":\"0.755\"}},\\n                 {\"line\":\"27\",\"locals\":{\"totalDollars\":\"50\",\"discountFactor\":\"0.755\"}}]}\\n   ```\\n8. Session auto-closed (`spectra_sessions`=0). Dismissed ANR `Wait`, final `nerve_state` shows `Quantity 7` + `Total: $50`, consistent with `totalDollars=50`.\\n\\nThe internal variable `discountFactor` inside `CheckoutViewModel.applyDiscount()` for quantity=7 is **0.755**.\\n'",
+  "wall_time_s": 86.93
+}

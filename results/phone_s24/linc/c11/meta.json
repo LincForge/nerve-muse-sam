@@ -1,0 +1,45 @@
+{
+  "agent_exit_code": 0,
+  "app_pin": {
+    "action": "verified",
+    "apk_md5": "2b07633116643b8165fe7cd0550e1a58",
+    "package": "dev.lincforge.benchtarget"
+  },
+  "capability_row": false,
+  "device": {
+    "android_version": "16",
+    "build": "BP4A.251205.006",
+    "model": "SM-S921U",
+    "sdk": "36"
+  },
+  "device_locked_post": false,
+  "device_locked_pre": false,
+  "model": "muse-spark-1.3-contributor",
+  "reset_steps": [
+    "wake",
+    "home",
+    "force-stop",
+    "clear-data"
+  ],
+  "solved_unfinalized": false,
+  "started_utc": "2026-10-27T22:02:07+00:00",
+  "task": "c11",
+  "tier": "C",
+  "timed_out": false,
+  "tokens": {
+    "cache_creation_tokens": 0,
+    "cache_read_tokens": 974232,
+    "input_tokens": 50111,
+    "num_turns": 25,
+    "output_tokens": 5135,
+    "source": "result-record",
+    "total_billed": 1029478,
+    "total_cost_usd": 0.007987,
+    "total_uncached": 55246
+  },
+  "tool": "linc",
+  "uiautomation_holders_cleared": [],
+  "verdict": "PASS",
+  "verify_detail": "]\\n     }\\n   ```\\n   Session auto-closed (one-shot) \u2014 `spectra_sessions count:0`.\\n9. **Recovery verification:**\\n   - ANR `BenchTarget isn\\'t responding` dismissed via `tap 540,2064 (Wait)`\\n   - Final `nerve_state` shows `Quantity 4`, `BENCH26`, **`Promo applied [72,1092][401,1164]`** \u2014 confirming Redeem executed.\\n\\nTherefore the internal local `auditToken` computed inside `CheckoutViewModel.redeemPromo(code:String)` for `Quantity=4, code=BENCH26` is exactly:\\n\\n```\\nAUD-4-BENCH26-8419\\n```'",
+  "wall_time_s": 123.75
+}

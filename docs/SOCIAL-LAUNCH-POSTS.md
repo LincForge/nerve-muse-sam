@@ -1,8 +1,9 @@
 # Social Launch Drafts (X & LinkedIn) — Meta Hackathon Demo
 
 > **DRAFT. Check every claim against a recorded run before posting** (verified 2026-10-27):
-> - [ ] Post 1 shows Muse Spark calling SAM 3.1 and tapping the unlabelled Canvas button live. No bench run has done this yet: `b11` ran on the frozen `linc` column, which has no grounding. Post it only once the `linc-sam` `c9` demo clip exists.
+> - [ ] **Post 1 and LinkedIn point 1 are NOT supported by any bench cell.** In all 8 scored `linc-sam` phone cells and 2 recorded `c9` demo re-runs (2026-10-27, S24 only), Muse Spark called `nerve_ground` **0 times** and never used `nerve_tap(prompt=...)`; it tapped the unlabelled Canvas Submit from its `uiautomator` bounds. Rewrite Post 1 so the SAM 3.1 grounding is shown as the `nerve ground` CLI overlay (section 3A of the README) and the agent clip shows what the transcript shows: the ship-gate run that found the seeded Tier defect. Do not say the agent called SAM.
 > - [ ] "`<$0.01` in contributor mode" for `b11` is an estimate from price tables. `b11` ran on Standard `muse-spark-1.3`. Either run it on `-contributor` or drop the clause.
+> - [ ] Phone grid numbers (README § 3B phone table): `linc` 8/8, `linc-sam` 8/8, c9 `linc` 667.6 s / 174 turns / $0.044, c9 `linc-sam` 630.4 s / 153 turns / $0.049; demo clip run = `results/demo_c9_linc_sam/` (PASS 577.6 s / 143 turns / $0.037). Quote only these.
 > - [ ] "`$0.0025/image`" for SAM 3.1: re-check dev.meta.ai pricing on the day of posting.
 > - [x] 92.2% cache rate, 57.58 s, 14 turns and $0.118 match `results/b11_watch7_run1/meta.json`.
 > - [x] Tool count: 70 MCP tools (nerve 48 + crucible 8 + spectra 14) plus `Read`.

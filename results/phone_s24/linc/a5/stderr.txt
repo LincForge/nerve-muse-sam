@@ -1,0 +1,25 @@
+[linc-nerve]
+aemon domain=sse_server host=127.0.0.1 port=8111
+2026-10-27 14:32:45 [debug    ] device_cache_refreshed         device_count=69 domain=device_control duration_ms=2429.5252500014612
+2026-10-27 14:32:57 [warning  ] slow_command                   cmd=uiautomator domain=device_control duration_ms=2307.5 serial=<REDACTED-0>
+2026-10-27 14:32:57 [warning  ] slow_command                   cmd=elements domain=device_control duration_ms=2307.9 serial=<REDACTED-0>
+2026-10-27 14:32:57 [info     ] scrcpy_available               domain=device_control
+2026-10-27 14:32:57 [info     ] scrcpy_server_pushed           domain=device_control serial=<REDACTED-0> size=90980
+2026-10-27 14:32:57 [info     ] scrcpy_control_connected       domain=device_control port=58086 serial=<REDACTED-0>
+2026-10-27 14:32:57 [info     ] scrcpy_stream_started          domain=device_control max_size=1080 port=58086 serial=<REDACTED-0>
+2026-10-27 14:33:05 [warning  ] slow_command                   cmd=uiautomator domain=device_control duration_ms=2092.3 serial=<REDACTED-0>
+2026-10-27 14:33:05 [warning  ] slow_command                   cmd=elements domain=device_control duration_ms=2092.6 serial=<REDACTED-0>
+2026-10-27 14:33:13 [warning  ] slow_command                   cmd=uiautomator domain=device_control duration_ms=2152.8 serial=<REDACTED-0>
+2026-10-27 14:33:13 [warning  ] slow_command                   cmd=elements domain=device_control duration_ms=2153.2 serial=<REDACTED-0>
+2026-10-27 14:33:19 [warning  ] slow_command                   cmd=uiautomator domain=device_control duration_ms=2152.5 serial=<REDACTED-0>
+2026-10-27 14:33:19 [warning  ] slow_command                   cmd=elements domain=device_control duration_ms=2152.8 serial=<REDACTED-0>
+2026-10-27 14:33:24 [warning  ] slow_command                   cmd=uiautomator domain=device_control duration_ms=2112.4 serial=<REDACTED-0>
+2026-10-27 14:33:24 [warning  ] slow_command                   cmd=elements domain=device_control duration_ms=2112.8 serial=<REDACTED-0>
+
+[linc-crucible]
+objc[43146]: Class AVFFrameReceiver is implemented in both /Users/<REDACTED>/projects/linc-crucible-pin/.venv/lib/python3.13/site-packages/av/.dylibs/libavdevice.62.1.100.dylib (0x107cc03a8) and /Users/<REDACTED>/projects/linc-crucible-pin/.venv/lib/python3.13/site-packages/cv2/.dylibs/libavdevice.61.3.100.dylib (0x10cd343a8). This may cause spurious casting failures and mysterious crashes. One of the duplicates must be removed or renamed.
+objc[43146]: Class AVFAudioReceiver is implemented in both /Users/<REDACTED>/projects/linc-crucible-pin/.venv/lib/python3.13/site-packages/av/.dylibs/libavdevice.62.1.100.dylib (0x107cc03f8) and /Users/<REDACTED>/projects/linc-crucible-pin/.venv/lib/python3.13/site-packages/cv2/.dylibs/libavdevice.61.3.100.dylib (0x10cd343f8). This may cause spurious casting failures and mysterious crashes. One of the duplicates must be removed or renamed.
+
+[linc-spectra]
+[10/27/26 14:32:40] INFO     Processing request of type            server.py:720
+                             ListToolsRequest                                   
