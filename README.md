@@ -13,7 +13,7 @@ Per the Hackathon Startup Track rules (*"Startups may build on existing products
 | Surface | Newly Built Hackathon Artifact (Oct 26 – Nov 4, 2026) | Upstream PR / Diff |
 |---|---|---|
 | **Visual Grounding (`SAM 3.1`)** | [`src/grounding.py`](src/grounding.py) + [`tests/test_grounding.py`](tests/test_grounding.py) — Promptable Concept Segmentation (`POST /v1/responses`, `model="sam-3.1"`), 1-bit base85 mask center-of-mass decoding via `meta-sam-parser==0.1.0`, multi-platform coordinate scaling (`1080x2340` Android phone, `432x432` Wear OS watch, iOS points), `nerve_ground` MCP tool, `nerve_tap(prompt=...)` semantic fallback, and green mask + red centroid overlay rendering. | [`LincForge/nerve` v0.2.0](https://github.com/LincForge/nerve/releases/tag/v0.2.0) · PyPI [`linc-nerve[grounding]==0.2.0`](https://pypi.org/project/linc-nerve/0.2.0/) (baseline `v0.1.0`) |
-| **Agent Loop (`Muse Spark 1.3` + Open Weights)** | [`src/meta_agent.py`](src/meta_agent.py) + [`tests/test_meta_agent.py`](tests/test_meta_agent.py) — Native MCP stdio agent runner over `POST https://api.meta.ai/v1/responses` (and `/v1/chat/completions` for `meta-models/muse-spark-open-1026` / `meta-models/Muse-Glimmer-30B`), stateful `reasoning.encrypted_content` replay across tool calls, `prompt_cache_key` prefix caching, and confined `Read` multimodal screenshot injection. | [`LincForge/mobile-agent-bench#27`](https://github.com/LincForge/mobile-agent-bench/pull/27) ([`pre-hackathon-2026-10-26..hackathon/muse-sam`](https://github.com/LincForge/mobile-agent-bench/compare/pre-hackathon-2026-10-26...hackathon/muse-sam)) |
+| **Agent Loop (`Muse Spark 1.3` + Open Weights)** | [`src/meta_agent.py`](src/meta_agent.py) + [`tests/test_meta_agent.py`](tests/test_meta_agent.py) — Native MCP stdio agent runner over `POST https://api.meta.ai/v1/responses` (and `/v1/chat/completions` for `meta-models/muse-spark-open-1026` / `meta-models/Muse-Glimmer-30B`), stateful `reasoning.encrypted_content` replay across tool calls, `prompt_cache_key` prefix caching, and confined `Read` multimodal screenshot injection. | [`LincForge/mobile-agent-bench#27`](https://github.com/LincForge/mobile-agent-bench/pull/27) ([`pre-hackathon-2026-10-26..main`](https://github.com/LincForge/mobile-agent-bench/compare/pre-hackathon-2026-10-26...main)) |
 | **Live Physical Bench Evidence** | [`results/`](results/) & [`assets/`](assets/) — Sanitized transcripts, token/cache accounting (`meta.json`), and live `SAM 3.1` segmentation overlays captured on physical **Samsung Galaxy S24 (`1080x2340`)** and **Samsung Galaxy Watch7 (`SM-L300`, `432x432`)**. | In this repo |
 
 ---
@@ -120,7 +120,7 @@ Two early `c9` attempts on 2026-10-27 (`muse-spark-1.3-contributor`) are **void*
 
 #### Columns
 - **`linc`**: the frozen, pre-registered v3 stack (`linc-nerve==0.1.0`). It has **no** SAM grounding, and the `b11` result above ran on it.
-- **`linc-sam`**: a **non-pre-registered addendum column** ([`tools_addendum/linc-sam.yaml`](https://github.com/LincForge/mobile-agent-bench/blob/hackathon/muse-sam/tools_addendum/linc-sam.yaml)). It uses the same crucible/spectra pins with `linc-nerve[grounding]==0.2.0` and `NERVE_GROUNDING=1`. Its results are reported separately and never pooled with the frozen columns.
+- **`linc-sam`**: a **non-pre-registered addendum column** ([`tools_addendum/linc-sam.yaml`](https://github.com/LincForge/mobile-agent-bench/blob/main/tools_addendum/linc-sam.yaml)). It uses the same crucible/spectra pins with `linc-nerve[grounding]==0.2.0` and `NERVE_GROUNDING=1`. Its results are reported separately and never pooled with the frozen columns.
 
 ---
 
@@ -137,7 +137,7 @@ export META_AI_API_KEY="your-meta-api-key"
 .venv/bin/nerve ground --device <adb-serial> --prompt "submit button" --annotate
 
 # 3. Run mobile-agent-bench with Meta Muse Spark 1.3
-git clone -b hackathon/muse-sam https://github.com/LincForge/mobile-agent-bench.git
+git clone https://github.com/LincForge/mobile-agent-bench.git
 cd mobile-agent-bench
 BENCH_TASKS_DIR=tasks_v3 BENCH_RESULTS_DIR=results_v3_muse BENCH_DEVICE_SERIAL=<adb-serial> \
   uv run bench run --tool linc --task b11 --runs 1 --model muse-spark-1.3
