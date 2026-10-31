@@ -80,3 +80,38 @@ Per Startup Track rules, we tagged our existing open-source repositories at pre-
 - Galaxy S24 Phone Grid (9 tasks x 2 columns on muse-spark-1.3-contributor): 9/9 PASS on the frozen linc column ($0.140 total) and 9/9 PASS on the linc-sam addendum column ($0.139 total). On the c9 ship-gate task, Muse Spark localized the seeded Tier dropdown bug in 153-174 turns for under 5 cents per run ($0.044 linc, $0.049 linc-sam) and tapped Submit directly from its uiautomator bounds (0 nerve_ground calls across all agent cells, disclosed in README §3B).
 - Galaxy Watch7 Wear OS Benchmark (b11): PASS in 57.58s (14 turns, 92.2% cached, $0.118 on muse-spark-1.3 Standard) and PASS in 50.9s (11 turns, 90.1% cached, $0.005 on muse-spark-1.3-contributor).
 ```
+
+---
+
+## 3. Additional Form Questions (drafted 2026-10-31, paste-ready, unwrapped)
+
+### What matters most when choosing an AI model or coding tool (optional)
+
+```text
+1) Pass rate on physical devices. mobile-agent-bench scores models on real phones and watches, not emulators.
+2) Cost per verified run. Our c9 ship-gate task runs 150+ turns, so prompt caching decides the bill. Muse Spark held 87.9-99.0% cache hits across our runs.
+3) Tool-call reliability over long tasks. Our device tasks run up to 174 turns against 70 MCP tools.
+4) License terms we can ship under. The SAM 3.1 parser license restricts some uses, so we made grounding an opt-in extra in nerve 0.2.0.
+```
+
+### Why are Meta's models important to your solution? (required)
+
+```text
+Real apps draw controls that the accessibility tree cannot name. On our seeded test form, Submit is a play icon drawn on a Compose Canvas. Android reports it as a Button with no text, no description and no id.
+SAM 3.1 found it from the prompt "play button" in 1.8 s at 0.84 confidence, for $0.0025 per image. That gives nerve a visual fallback when uiautomator has no label (nerve_ground and nerve_tap with a prompt).
+Muse Spark 1.3 carries the long tasks. Encrypted reasoning replay plus a per-run prompt_cache_key kept 153-174 turn runs at 98-99% cache hits. It caught the seeded Tier bug on a physical Galaxy S24 for under 5 cents per run. It passed 18/18 phone cells and the Galaxy Watch7 task ($0.005).
+Both models sit behind one endpoint (/v1/responses), so reasoning and vision share one client.
+In the scored runs the agent never needed nerve_ground, because uiautomator bounds were enough. Our next task set removes those bounds to test grounding inside the agent loop.
+```
+
+### Feedback from your experience using partner technologies (optional)
+
+Recommendation: leave blank, or paste the line below. No partner platform was used.
+
+```text
+We did not use Fireworks, Modal or Baseten. Every call went directly to api.meta.ai/v1/responses.
+```
+
+### Radio questions (CEO's call)
+- How likely are you to build with Meta Model API?
+- Overall opinion of Meta Model API?
