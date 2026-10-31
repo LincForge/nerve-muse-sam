@@ -103,7 +103,7 @@ Per column (phone tasks incl. `a6`): `linc` 9/9 PASS, $0.140 total, 1,793 s of a
 
 #### Demo video (`assets/demo.mp4`, 129 s, 1920x1080)
 
-[`assets/demo.mp4`](assets/demo.mp4) is a side-by-side cut: **left**, the Galaxy S24; **right**, the Galaxy Watch7. Every number on screen comes from the named cell's `meta.json`, and the captions say which clips are the agent and which are the CLI.
+**Watch:** https://youtu.be/9S16V0PKQuY (unlisted, 129 s). [`assets/demo.mp4`](assets/demo.mp4) is a side-by-side cut: **left**, the Galaxy S24; **right**, the Galaxy Watch7. Every number on screen comes from the named cell's `meta.json`, and the captions say which clips are the agent and which are the CLI.
 
 0. **0:00–0:10, title card.** What existed before the `pre-hackathon-2026-10-26` tag and what was built during the hackathon window.
 

@@ -47,7 +47,7 @@ Per Participant Guide §4 & §7, startups building on existing codebases **must 
 - **Additional Public PR / Release Links:**
   - `https://github.com/LincForge/nerve/releases/tag/v0.2.0` (`linc-nerve[grounding]==0.2.0` on PyPI)
   - `https://github.com/LincForge/mobile-agent-bench/pull/27` (merged to `main`: `https://github.com/LincForge/mobile-agent-bench/compare/pre-hackathon-2026-10-26...main`)
-- **Demo Video URL:** `<INSERT_YOUTUBE_URL_FROM_STEP_1B>`
+- **Demo Video URL:** `https://youtu.be/9S16V0PKQuY` (unlisted, 129 s, embeddable, LINC Innovations channel)
 - **Meta Models Used:** `muse-spark-1.3`, `muse-spark-1.3-contributor`, `sam-3.1` (via `POST https://api.meta.ai/v1/responses` + `meta-sam-parser==0.1.0`)
 
 ### Short Description (1-2 sentences, unwrapped)
