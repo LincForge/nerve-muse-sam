@@ -1,9 +1,9 @@
 # Social Launch Drafts (X & LinkedIn) - Meta Hackathon Demo
 
 > **Pre-post verification checklist** (verified 2026-10-30):
-> - [x] **Post 1 and LinkedIn point 1 rewritten to match recorded runs.** In all 8 scored `linc-sam` phone cells (plus `a6`, `b11`, and 2 recorded `c9` demo re-runs), Muse Spark called `nerve_ground` **0 times** and never used `nerve_tap(prompt=...)`. It tapped the unlabelled Canvas Submit from its `uiautomator` bounds `(180, 877)` inside `[72,804][276,948]`. The drafts below state that SAM 3.1 grounding (`1.8s`, confidence `0.84`, center `(173, 875)`) is run via the `nerve ground` CLI and that the agent caught the seeded Tier defect for 4 cents using `uiautomator` bounds.
+> - [x] **Post 1 and LinkedIn point 1 rewritten to match recorded runs.** In all 8 scored `linc-sam` phone cells (plus `a6`, `b11`, and 2 recorded `c9` demo re-runs), Muse Spark called `nerve_ground` **0 times** and never used `nerve_tap(prompt=...)`. It tapped the unlabelled Canvas Submit from its `uiautomator` bounds `(180, 877)` inside `[72,804][276,948]`. The drafts below state that SAM 3.1 grounding (`1.8s`, confidence `0.84`, center `(173, 875)`) is run via the `nerve ground` CLI and that the agent caught the seeded Tier defect for under 5 cents using `uiautomator` bounds.
 > - [x] `b11` has both runs quoted accurately: Standard `linc` (`57.58s`, 14 turns, `92.2%` cached, `$0.118`) and contributor `linc-sam` (`50.9s`, 11 turns, `90.1%` cached, `$0.005`).
-> - [x] `assets/demo.mp4` (`110.9s`, pending Montaj title/end cards on MacBook) captions state CLI vs agent, and the post text matches them.
+> - [x] `assets/demo.mp4` (`128.9s` with title/end cards) captions state CLI vs agent, and the post text matches them.
 > - [x] Phone grid numbers match `README.md` §3B: `linc` 9/9 (`8/8` phone-only + `a6`, `$0.140` total), `linc-sam` 9/9 (`8/8` phone-only + `a6`, `$0.139` total), `c9` `linc` `667.6s` / 174 turns / `$0.044`, `c9` `linc-sam` `630.4s` / 153 turns / `$0.049`, and recorded demo run `results/demo_c9_linc_sam/` (`577.6s` / 143 turns / `$0.037`).
 > - [x] "`$0.0025/image`" (`$2.50 / 1,000 images`) matches `src/meta_agent.py` and `dev.meta.ai` pricing as of 2026-10-30 (re-confirm on `dev.meta.ai` on the day of posting).
 > - [x] `92.2%` cache rate, `57.58s`, 14 turns, and `$0.118` match `results/b11_watch7_run1/meta.json`.
@@ -28,7 +28,7 @@ We wired Meta's Muse Spark 1.3 and SAM 3.1 into nerve (our Apache-2.0 MCP server
 
 1) SAM 3.1 (nerve v0.2.0 CLI): segmented an unlabelled Compose Canvas Submit icon on the S24 in 1.8s (0.84 confidence, $0.0025/image). It scaled the 1-bit mask center from screenshot pixels to physical coordinates (173, 875).
 
-2) S24 phone grid (muse-spark-1.3-contributor): 9/9 PASS on both columns ($0.140 linc, $0.139 linc-sam). On the c9 ship-gate, the agent caught the seeded Tier dropdown bug for 4 cents ($0.044 linc, $0.049 linc-sam, $0.037 in the demo clip) and tapped Submit from its uiautomator bounds (0 nerve_ground calls).
+2) S24 phone grid (muse-spark-1.3-contributor): 9/9 PASS on both columns ($0.140 linc, $0.139 linc-sam). On the c9 ship-gate, the agent caught the seeded Tier dropdown bug for under 5 cents ($0.044 linc, $0.049 linc-sam, $0.037 in the demo clip) and tapped Submit from its uiautomator bounds (0 nerve_ground calls).
 
 3) Galaxy Watch7 (b11): PASS in 57.58s ($0.118 Standard, 92.2% cached across 70 MCP tools) and 50.9s ($0.005 contributor).
 ```
@@ -53,7 +53,7 @@ Results across 20 hardware runs:
 
 1) SAM 3.1 grounding (nerve v0.2.0): The nerve ground CLI segmented an unlabelled Compose Canvas button in 1.8s at 0.84 confidence ($0.0025/image).
 
-2) S24 phone grid (muse-spark-1.3-contributor): 9/9 PASS on both columns ($0.140 on linc, $0.139 on linc-sam). On c9, the agent caught the seeded Tier bug for 4 cents ($0.044 linc, $0.049 linc-sam) using uiautomator bounds (0 nerve_ground calls).
+2) S24 phone grid (muse-spark-1.3-contributor): 9/9 PASS on both columns ($0.140 on linc, $0.139 on linc-sam). On c9, the agent caught the seeded Tier bug for under 5 cents ($0.044 linc, $0.049 linc-sam) using uiautomator bounds (0 nerve_ground calls).
 
 3) Galaxy Watch7 (b11): PASS in 57.58s ($0.118 Standard, 92.2% cached across 70 MCP tools) and 50.9s ($0.005 contributor).
 

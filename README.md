@@ -101,14 +101,17 @@ Per column (phone tasks incl. `a6`): `linc` 9/9 PASS, $0.140 total, 1,793 s of a
 
 **What `linc-sam` did not do.** In all eight `linc-sam` cells the agent called `nerve_ground` **zero** times and never used `nerve_tap(prompt=...)`, even with `NERVE_GROUNDING=1` and both tools advertised (72 tools vs 71 in `linc`). On `c9` it tapped the unlabelled Canvas Submit by coordinates `(180, 877)`, inside the `[72,804][276,948]` bounds that `uiautomator` reports for the `android.widget.Button` even though the button has no text, content description or resource id. The element tree was enough for this task set, so the SAM column's pass rate says nothing about grounding; the overlays in section 3A are the evidence that grounding works, and they were produced with the `nerve ground` CLI, not by the agent inside a bench cell.
 
-#### Demo video (`assets/demo.mp4`, 111 s, 1920x1080)
+#### Demo video (`assets/demo.mp4`, 129 s, 1920x1080)
 
 [`assets/demo.mp4`](assets/demo.mp4) is a side-by-side cut: **left**, the Galaxy S24; **right**, the Galaxy Watch7. Every number on screen comes from the named cell's `meta.json`, and the captions say which clips are the agent and which are the CLI.
 
-1. **0:00–0:20, S24, CLI.** `nerve ground --prompt "play button" --annotate` on the seeded `c9` Form, then `nerve tap` at the returned centre `(173, 875)` (SAM 3.1 box `[72,817][274,934]`, confidence 0.84, 1.8 s). The Form registers. This is the SAM 3.1 grounding path; it was driven by hand, not by the agent. The annotated frame is [`assets/c9_submit_grounded_cli.png`](assets/c9_submit_grounded_cli.png).
-2. **0:20–1:12, S24, agent, 1.6x.** Muse Spark 1.3 on the `c9` ship-gate ([`results/demo_c9_linc_sam/`](results/demo_c9_linc_sam/), a recorded re-run that is not in the scored table): it fills the Form with `Alice`, enables Subscribe, selects Tier `Pro`, submits, and the app registers `Basic`. The agent tapped Submit from its `uiautomator` bounds; `nerve_ground` was not called.
-3. **1:12–1:51, S24, agent, ~11x.** The rest of that run: Checkout, Orders, Catalog, Diagnostics, the `spectra` breakpoint stall, and the final `DO NOT SHIP` with the Tier defect as finding 1 (577.6 s, 143 turns, $0.037).
-4. **Right pane, Watch7, agent, 1x.** The `b11` `linc-sam` cell above, from the harness reset (`Mode: Standard`, `Pings: 0`) to `Pings: 15 (Burst)` (50.9 s, 11 turns, $0.005), then held on the final frame.
+0. **0:00–0:10, title card.** What existed before the `pre-hackathon-2026-10-26` tag and what was built during the hackathon window.
+
+1. **0:10–0:30, S24, CLI.** `nerve ground --prompt "play button" --annotate` on the seeded `c9` Form, then `nerve tap` at the returned centre `(173, 875)` (SAM 3.1 box `[72,817][274,934]`, confidence 0.84, 1.8 s). The Form registers. This is the SAM 3.1 grounding path; it was driven by hand, not by the agent. The annotated frame is [`assets/c9_submit_grounded_cli.png`](assets/c9_submit_grounded_cli.png).
+2. **0:30–1:22, S24, agent, 1.6x.** Muse Spark 1.3 on the `c9` ship-gate ([`results/demo_c9_linc_sam/`](results/demo_c9_linc_sam/), a recorded re-run that is not in the scored table): it fills the Form with `Alice`, enables Subscribe, selects Tier `Pro`, submits, and the app registers `Basic`. The agent tapped Submit from its `uiautomator` bounds; `nerve_ground` was not called.
+3. **1:22–2:01, S24, agent, ~11x.** The rest of that run: Checkout, Orders, Catalog, Diagnostics, the `spectra` breakpoint stall, and the final `DO NOT SHIP` with the Tier defect as finding 1 (577.6 s, 143 turns, $0.037).
+4. **Right pane, Watch7, agent, 1x.** The `b11` `linc-sam` cell above, from the harness reset (`Mode: Standard`, `Pings: 0`) to `Pings: 15 (Burst)` (50.9 s, 11 turns, $0.005), then held on the final frame. The first 0.7 s of this pane is a still of the app-launch frame: before the harness reset launched BenchTarget, an unrelated watch app was in the foreground.
+5. **2:01–2:09, results card.** The scorecard above, with the `nerve_ground: 0 calls` disclosure.
 
 Both scored `c9` cells (`linc` and `linc-sam`) have no video: an external `scrcpy` cannot record while nerve's own screen stream is active, so the demo clip is a third, recorded run with the same verdict.
 

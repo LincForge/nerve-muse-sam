@@ -8,7 +8,7 @@
 
 ## 1. MacBook Video Step (Montaj + YouTube Upload, ~10 min on `displays-macbook-pro`)
 
-Per Participant Guide §4 & §7, startups building on existing codebases **must clearly identify in the demo video what was newly built during the Oct 26 – Nov 4, 2026 Hackathon window** (total video cap `<= 180s`; current `assets/demo.mp4` is `110.9s`).
+Per Participant Guide §4 & §7, startups building on existing codebases **must clearly identify in the demo video what was newly built during the Oct 26 – Nov 4, 2026 Hackathon window** (total video cap `<= 180s`; `assets/demo.mp4` with cards is `128.9s`).
 
 ### A. Montaj Edit Spec (Input: `~/projects/nerve-muse-sam/assets/demo.mp4` or `~/.linc/mab-demo/comp/`)
 1. **Title Card (`0:00–0:08`, ~8s):**
@@ -28,7 +28,7 @@ Per Participant Guide §4 & §7, startups building on existing codebases **must 
    - **Links:** `github.com/LincForge/nerve-muse-sam` · `pypi.org/project/linc-nerve/0.2.0/`
 4. **Export Check:**
    - Save exported MP4 to `~/projects/nerve-muse-sam/assets/demo.mp4`.
-   - Verify duration `<= 180s`: `ffprobe -v error -show_entries format=duration -of csv=p=0 assets/demo.mp4` (expected `~127s`).
+   - Verify duration `<= 180s`: `ffprobe -v error -show_entries format=duration -of csv=p=0 assets/demo.mp4` (built: `128.9s`, 10 s title + 110.9 s main + 8 s end).
 
 ### B. YouTube Hosting Upload
 - Upload `assets/demo.mp4` to the LINC YouTube channel (`--channel linc`, `privacyStatus: unlisted` or `public`, never `scheduled`).
@@ -77,6 +77,6 @@ Per Startup Track rules, we tagged our existing open-source repositories at pre-
 3) Live Physical Hardware Evaluation & Public Showcase (github.com/LincForge/nerve-muse-sam):
 - Evaluated across 20 scored physical-device cells (plus 2 disclosed voided cells) under strict sandbox confinement on a physical Samsung Galaxy S24 (SM-S921U, Android 16) and Samsung Galaxy Watch7 (SM-L300, Wear OS 16).
 - SAM 3.1 CLI Grounding on Seeded c9 Canvas Submit: uiautomator reports the Submit control as an android.widget.Button at [72,804][276,948] with no text, contentDescription, or resource-id (its play-triangle is drawn on a Compose Canvas). nerve ground --prompt "play button" segmented it at [72,817][274,934] (center 173, 875, confidence 0.84) in 1.8s.
-- Galaxy S24 Phone Grid (9 tasks x 2 columns on muse-spark-1.3-contributor): 9/9 PASS on the frozen linc column ($0.140 total) and 9/9 PASS on the linc-sam addendum column ($0.139 total). On the c9 ship-gate task, Muse Spark localized the seeded Tier dropdown bug in 153-174 turns for 4 cents ($0.044 linc, $0.049 linc-sam) and tapped Submit directly from its uiautomator bounds (0 nerve_ground calls across all agent cells, disclosed in README §3B).
+- Galaxy S24 Phone Grid (9 tasks x 2 columns on muse-spark-1.3-contributor): 9/9 PASS on the frozen linc column ($0.140 total) and 9/9 PASS on the linc-sam addendum column ($0.139 total). On the c9 ship-gate task, Muse Spark localized the seeded Tier dropdown bug in 153-174 turns for under 5 cents per run ($0.044 linc, $0.049 linc-sam) and tapped Submit directly from its uiautomator bounds (0 nerve_ground calls across all agent cells, disclosed in README §3B).
 - Galaxy Watch7 Wear OS Benchmark (b11): PASS in 57.58s (14 turns, 92.2% cached, $0.118 on muse-spark-1.3 Standard) and PASS in 50.9s (11 turns, 90.1% cached, $0.005 on muse-spark-1.3-contributor).
 ```
